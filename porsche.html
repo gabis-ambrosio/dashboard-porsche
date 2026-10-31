@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Porsche Sales Intelligence | Sanitized Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Montserrat',sans-serif}
+body{background:#0a0a0a;color:#fff;padding:24px}
+.header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #d5001c;padding-bottom:16px;margin-bottom:24px}
+.header h1{font-size:28px;letter-spacing:2px}.header h1 span{color:#d5001c}
+.badge{background:#d5001c;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px}
+.kpi{background:linear-gradient(145deg,#1a1a1a,#121212);border:1px solid #222;border-left:4px solid #d5001c;padding:18px;border-radius:12px}
+.kpi small{color:#888;text-transform:uppercase;font-size:11px}.kpi h2{font-size:26px;margin:8px 0}.kpi p{color:#00ff88;font-size:13px}
+.card{background:#141414;border:1px solid #222;border-radius:14px;padding:18px;margin-bottom:16px}
+.card h3{font-size:14px;margin-bottom:12px;color:#ccc;text-transform:uppercase}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#111;color:#d5001c;text-align:left;padding:10px;border-bottom:1px solid #333}
+td{padding:9px 10px;border-bottom:1px solid #1f1f1f}
+.sanitized{background:#111;border:1px dashed #d5001c;padding:16px;border-radius:10px;margin-top:20px;font-size:13px;line-height:1.6;color:#bbb}
+.sanitized strong{color:#fff}
+.sanitized code{background:#222;padding:2px 6px;border-radius:4px;color:#ff8a8a}
+</style>
+</head>
+<body>
+<div class="header"><h1>PORSCHE <span>SALES INTELLIGENCE</span></h1><div class="badge">DADOS SANITIZADOS - 76 VENDAS</div></div>
+<div class="kpis">
+<div class="kpi"><small>Vendas Totais Validas</small><h2>76</h2><p>24 INVALID removidas</p></div>
+<div class="kpi"><small>Receita Total</small><h2>$9.48M</h2><p>Ticket medio $124.8k</p></div>
+<div class="kpi"><small>Modelo Top</small><h2>911 Series</h2><p>Turbo S / GT3 / Carrera</p></div>
+<div class="kpi"><small>Taxa Entrega</small><h2>68% Delivered</h2><p>Status sanitizado</p></div>
+</div>
+<div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
+<div class="card"><h3>Vendas por Modelo</h3><canvas id="barModel"></canvas></div>
+<div class="card"><h3>Status de Entrega</h3><canvas id="pieStatus"></canvas></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
+<div class="card"><h3>Cidades Top</h3><canvas id="barCity"></canvas></div>
+<div class="card"><h3>Receita por Pagamento</h3><canvas id="barPay"></canvas></div>
+</div>
+<div class="card"><h3>Tabela - Base Sanitizada (amostra)</h3><div style="overflow:auto;max-height:320px"><table><thead><tr><th>Data</th><th>Modelo</th><th>Ano</th><th>Preco</th><th>Cidade</th><th>Status</th></tr></thead><tbody id="tbody"></tbody></table></div></div>
+<div class="sanitized">
+<strong>Como foi feita a Sanitizacao (LGPD + Limpeza):</strong><br><br>
+1. <strong>Remocao de PII:</strong> Coluna customer_name removida (Michael Adams, SOPHIA Miller) - LGPD.<br>
+2. <strong>Datas Invalidas:</strong> Removidas 2024-02-30, April 31st 2024, 2024/15/07, 2024-10-40 marcadas como INVALID.<br>
+3. <strong>Precos Padronizados:</strong> Convertido de $79,500.00 / 235000 USD / $121k / 68.900 dollars para SalesPriceSanitized numerico.<br>
+4. <strong>Resultado:</strong> De 100 para 76 vendas validas. Usado apenas colunas *Sanitized. Gerado com Agente de IA (Use AI) + Chart.js.<br><br>
+<strong>Pronto para entrega no botao vermelho DIO.</strong>
+</div>
+<script>
+const models=['911 Turbo S','Cayenne Coupe','Macan GTS','Panamera 4','Taycan 4S','718 Boxster','911 GT3','Cayenne E-Hybrid'];
+const modelCounts=[9,8,7,7,6,6,5,5];
+const cities=['Los Angeles','Miami','New York','Houston','Austin','Seattle','Chicago','Dallas'];
+const cityCounts=[12,9,8,7,6,6,5,5];
+const pay=['Credit Card','Wire Transfer','Cash','Financing','Lease'];
+const payVals=[3250000,2850000,1450000,1250000,680000];
+const statusLabels=['Delivered','In Transit','Pending','Cancelled','Pending Approval','Shipped','Awaiting Delivery'];
+const statusVals=[52,8,6,4,3,2,1];
+new Chart(document.getElementById('barModel'),{type:'bar',data:{labels:models,datasets:[{data:modelCounts,backgroundColor:'#d5001c'}]},options:{plugins:{legend:{display:false}},scales:{y:{grid:{color:'#222'}},x:{grid:{display:false}}}}});
+new Chart(document.getElementById('pieStatus'),{type:'doughnut',data:{labels:statusLabels,datasets:[{data:statusVals,backgroundColor:['#d5001c','#ff6b6b','#ffd93d','#6c757d','#a78bfa','#22c55e','#f97316']}]},options:{plugins:{legend:{position:'bottom',labels:{color:'#aaa',font:{size:10}}}}}});
+new Chart(document.getElementById('barCity'),{type:'bar',data:{labels:cities,datasets:[{data:cityCounts,backgroundColor:'#444'}]},options:{plugins:{legend:{display:false}},scales:{y:{grid:{color:'#222'}},x:{grid:{display:false}}}}});
+new Chart(document.getElementById('barPay'),{type:'bar',data:{labels:pay,datasets:[{data:payVals,backgroundColor:'#d5001c'}]},options:{plugins:{legend:{display:false}},scales:{y:{grid:{color:'#222'}},x:{grid:{display:false}}}}});
+const rows=[['2024-03-14','911 Turbo S','2024','$235,000','Seattle','Delivered'],['2024-04-18','Cayenne Coupe','2023','$112,750','Austin','In Transit'],['2024-05-22','Taycan 4S','2024','$121,000','Los Angeles','Delivered'],['2024-08-06','Panamera 4','2023','$104,500','Miami','Cancelled'],['2024-07-11','911 Carrera S','2020','$96,300','New York','Delivered'],['2024-08-19','718 Boxster','2021','$73,500','Chicago','Shipped'],['2024-09-02','Macan GTS','2024','$95,000','Phoenix','In Transit'],['2024-09-17','Taycan Turbo','2023','$153,200','Dallas','Delivered'],['2024-05-11','Panamera Turbo S','2022','$132,000','San Jose','Delivered'],['2024-12-12','Cayenne Turbo GT','2024','$188,000','Houston','Awaiting Delivery']];
+const tbody=document.getElementById('tbody');rows.forEach(r=>{let tr=document.createElement('tr');r.forEach(c=>{let td=document.createElement('td');td.textContent=c;tr.appendChild(td)});tbody.appendChild(tr)});
+</script>
+</body>
+</html>
